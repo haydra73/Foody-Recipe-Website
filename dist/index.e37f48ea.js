@@ -734,37 +734,7 @@ const init = ()=>{
 };
 init();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","core-js/modules/web.immediate.js":"49tUX","regenerator-runtime/runtime":"dXNgZ","./model":"Y4A21","./views/recipeView":"l60JC","./views/searchView":"9OQAM","./views/resultsView":"cSbZE","./views/paginationView":"6z7bi","./views/bookmarksView":"4Lqzq","./views/addRecipeView":"i6DNj","./config":"k5Hzs"}],"gkKU3":[function(require,module,exports) {
-exports.interopDefault = function(a) {
-    return a && a.__esModule ? a : {
-        default: a
-    };
-};
-exports.defineInteropFlag = function(a) {
-    Object.defineProperty(a, "__esModule", {
-        value: true
-    });
-};
-exports.exportAll = function(source, dest) {
-    Object.keys(source).forEach(function(key) {
-        if (key === "default" || key === "__esModule" || dest.hasOwnProperty(key)) return;
-        Object.defineProperty(dest, key, {
-            enumerable: true,
-            get: function() {
-                return source[key];
-            }
-        });
-    });
-    return dest;
-};
-exports.export = function(dest, destName, get) {
-    Object.defineProperty(dest, destName, {
-        enumerable: true,
-        get: get
-    });
-};
-
-},{}],"49tUX":[function(require,module,exports) {
+},{"core-js/modules/web.immediate.js":"49tUX","regenerator-runtime/runtime":"dXNgZ","./model":"Y4A21","./views/recipeView":"l60JC","./views/searchView":"9OQAM","./views/resultsView":"cSbZE","./views/paginationView":"6z7bi","./views/bookmarksView":"4Lqzq","./views/addRecipeView":"i6DNj","./config":"k5Hzs","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"49tUX":[function(require,module,exports) {
 "use strict";
 // TODO: Remove this module from `core-js@4` since it's split to modules listed below
 require("52e9b3eefbbce1ed");
@@ -2764,7 +2734,7 @@ const deleteRecipe = async (id)=>{
     }
 };
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./config":"k5Hzs","./helpers":"hGI1E"}],"k5Hzs":[function(require,module,exports) {
+},{"./config":"k5Hzs","./helpers":"hGI1E","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"k5Hzs":[function(require,module,exports) {
 // API url link
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
@@ -2779,7 +2749,37 @@ const TIMEOUT_SEC = 10;
 const RESULT_PER_PAGE = 10;
 const MODAL_CLOSE_SEC = 1;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hGI1E":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, "__esModule", {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === "default" || key === "__esModule" || dest.hasOwnProperty(key)) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
+};
+
+},{}],"hGI1E":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "getJSON", ()=>getJSON);
@@ -2990,7 +2990,105 @@ class RecipeView extends (0, _viewJsDefault.default) {
 }
 exports.default = new RecipeView();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","url:../../img/icons.svg":"loVOp","fractional":"3SU56","./View.js":"5cUXS"}],"loVOp":[function(require,module,exports) {
+},{"./View.js":"5cUXS","url:../../img/icons.svg":"loVOp","fractional":"3SU56","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5cUXS":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _iconsSvg = require("url:../../img/icons.svg");
+var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
+class View {
+    _data;
+    // Insert html in a container element
+    _insertHtml(markup) {
+        this._parentElement.insertAdjacentHTML("afterbegin", markup);
+    }
+    _clear() {
+        this._parentElement.innerHTML = " ";
+    }
+    // Render the recipes
+    render(data, render = true) {
+        // Guard class for data
+        if (!data || Array.isArray(data) && data.length === 0) return this.renderError();
+        ///////////
+        this._data = data;
+        //get markup
+        const recipeMarkup = this._generateMarkup();
+        // USED ONLY TO RECIEVE THE MARKUP BUT NOT RENDER ANYTHING TO DOM
+        if (!render) return recipeMarkup;
+        //clear the page
+        this._clear();
+        //render on page
+        this._insertHtml(recipeMarkup);
+    }
+    // Update the dom where it has to be updated (JUST LIKE REACT)
+    update(data) {
+        //Guard clause again if there is no data
+        if (!data && Array.isArray(data) && data.length === 0) return this.renderError();
+        ///////////////////
+        // Get the data
+        this._data = data;
+        ///////// THE ALGORITHM 💀 ///////////////
+        // 1) Generate new markup
+        const newMarkup = this._generateMarkup();
+        // 2) Create the DOM from the new markup
+        const newDOM = document.createRange().createContextualFragment(newMarkup);
+        // 3) Choose all elements from the new markup
+        const newElements = Array.from(newDOM.querySelectorAll("*"));
+        // 4) Choose all elements from the current showing markup
+        const currentElements = Array.from(this._parentElement.querySelectorAll("*"));
+        // 5) Loop through the new elements and find the ones which are different
+        newElements.forEach((newEl, i)=>{
+            // Select the current element from the outside array according to the new element array indexes
+            const currentEl = currentElements[i];
+            // Check if the nodes are similar with (isEqualNode) && if the nodeValue of the newElements firstchild isnt empty to that its a node that contains textcontent
+            if (!newEl.isEqualNode(currentEl) && newEl.firstChild?.nodeValue.trim() !== "") currentEl.textContent = newEl.textContent;
+            // Update the attributes of the elements
+            if (!newEl.isEqualNode(currentEl)) Array.from(newEl.attributes).forEach((attr)=>{
+                currentEl.setAttribute(attr.name, attr.value);
+            });
+        });
+    }
+    // Render the spinner before loading recipes
+    renderSpinner() {
+        const spinnerMarkup = `
+    <div class="spinner">
+          <svg>
+            <use href="${(0, _iconsSvgDefault.default)}#icon-loader"></use>
+          </svg>
+        </div>
+    `;
+        this._clear();
+        this._insertHtml(spinnerMarkup);
+    }
+    // Render an error message
+    renderError(message = this._ErrorMessage) {
+        const errorMarkup = `<div class="message">
+  <div>
+    <svg>
+      <use href="${(0, _iconsSvgDefault.default)}#icon-smile"></use>
+    </svg>
+  </div>
+  <p>${message}</p>
+</div>`;
+        this._clear();
+        this._insertHtml(errorMarkup);
+    }
+    // Render a success message
+    renderSuccess(message = this._SuccessMessage) {
+        const errorMarkup = `<div class="message">
+  <div>
+    <svg>
+      <use href="${(0, _iconsSvgDefault.default)}#icon-alert-triangle"></use>
+    </svg>
+  </div>
+  <p>${message}</p>
+</div>`;
+        this._clear();
+        this._insertHtml(errorMarkup);
+    }
+}
+exports.default = View;
+
+},{"url:../../img/icons.svg":"loVOp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"loVOp":[function(require,module,exports) {
 module.exports = require("9bcc84ee5d265e38").getBundleURL("hWUTQ") + "icons.dfd7a6db.svg" + "?" + Date.now();
 
 },{"9bcc84ee5d265e38":"lgJ39"}],"lgJ39":[function(require,module,exports) {
@@ -3281,105 +3379,7 @@ Fraction.primeFactors = function(n) {
 };
 module.exports.Fraction = Fraction;
 
-},{}],"5cUXS":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _iconsSvg = require("url:../../img/icons.svg");
-var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
-class View {
-    _data;
-    // Insert html in a container element
-    _insertHtml(markup) {
-        this._parentElement.insertAdjacentHTML("afterbegin", markup);
-    }
-    _clear() {
-        this._parentElement.innerHTML = " ";
-    }
-    // Render the recipes
-    render(data, render = true) {
-        // Guard class for data
-        if (!data || Array.isArray(data) && data.length === 0) return this.renderError();
-        ///////////
-        this._data = data;
-        //get markup
-        const recipeMarkup = this._generateMarkup();
-        // USED ONLY TO RECIEVE THE MARKUP BUT NOT RENDER ANYTHING TO DOM
-        if (!render) return recipeMarkup;
-        //clear the page
-        this._clear();
-        //render on page
-        this._insertHtml(recipeMarkup);
-    }
-    // Update the dom where it has to be updated (JUST LIKE REACT)
-    update(data) {
-        //Guard clause again if there is no data
-        if (!data && Array.isArray(data) && data.length === 0) return this.renderError();
-        ///////////////////
-        // Get the data
-        this._data = data;
-        ///////// THE ALGORITHM 💀 ///////////////
-        // 1) Generate new markup
-        const newMarkup = this._generateMarkup();
-        // 2) Create the DOM from the new markup
-        const newDOM = document.createRange().createContextualFragment(newMarkup);
-        // 3) Choose all elements from the new markup
-        const newElements = Array.from(newDOM.querySelectorAll("*"));
-        // 4) Choose all elements from the current showing markup
-        const currentElements = Array.from(this._parentElement.querySelectorAll("*"));
-        // 5) Loop through the new elements and find the ones which are different
-        newElements.forEach((newEl, i)=>{
-            // Select the current element from the outside array according to the new element array indexes
-            const currentEl = currentElements[i];
-            // Check if the nodes are similar with (isEqualNode) && if the nodeValue of the newElements firstchild isnt empty to that its a node that contains textcontent
-            if (!newEl.isEqualNode(currentEl) && newEl.firstChild?.nodeValue.trim() !== "") currentEl.textContent = newEl.textContent;
-            // Update the attributes of the elements
-            if (!newEl.isEqualNode(currentEl)) Array.from(newEl.attributes).forEach((attr)=>{
-                currentEl.setAttribute(attr.name, attr.value);
-            });
-        });
-    }
-    // Render the spinner before loading recipes
-    renderSpinner() {
-        const spinnerMarkup = `
-    <div class="spinner">
-          <svg>
-            <use href="${(0, _iconsSvgDefault.default)}#icon-loader"></use>
-          </svg>
-        </div>
-    `;
-        this._clear();
-        this._insertHtml(spinnerMarkup);
-    }
-    // Render an error message
-    renderError(message = this._ErrorMessage) {
-        const errorMarkup = `<div class="message">
-  <div>
-    <svg>
-      <use href="${(0, _iconsSvgDefault.default)}#icon-smile"></use>
-    </svg>
-  </div>
-  <p>${message}</p>
-</div>`;
-        this._clear();
-        this._insertHtml(errorMarkup);
-    }
-    // Render a success message
-    renderSuccess(message = this._SuccessMessage) {
-        const errorMarkup = `<div class="message">
-  <div>
-    <svg>
-      <use href="${(0, _iconsSvgDefault.default)}#icon-alert-triangle"></use>
-    </svg>
-  </div>
-  <p>${message}</p>
-</div>`;
-        this._clear();
-        this._insertHtml(errorMarkup);
-    }
-}
-exports.default = View;
-
-},{"url:../../img/icons.svg":"loVOp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9OQAM":[function(require,module,exports) {
+},{}],"9OQAM":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 class SearchView {
@@ -3420,7 +3420,7 @@ class ResultsView extends (0, _viewDefault.default) {
 }
 exports.default = new ResultsView();
 
-},{"./View":"5cUXS","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","url:../../img/icons.svg":"loVOp","./cardView":"gEib3"}],"gEib3":[function(require,module,exports) {
+},{"url:../../img/icons.svg":"loVOp","./View":"5cUXS","./cardView":"gEib3","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gEib3":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _view = require("./View");
@@ -3454,7 +3454,7 @@ class CardView extends (0, _viewDefault.default) {
 }
 exports.default = new CardView();
 
-},{"./View":"5cUXS","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","url:../../img/icons.svg":"loVOp"}],"6z7bi":[function(require,module,exports) {
+},{"./View":"5cUXS","url:../../img/icons.svg":"loVOp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6z7bi":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _config = require("../config");
@@ -3505,7 +3505,7 @@ class PaginationView extends (0, _viewDefault.default) {
 }
 exports.default = new PaginationView();
 
-},{"./View":"5cUXS","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../config":"k5Hzs","url:../../img/icons.svg":"loVOp"}],"4Lqzq":[function(require,module,exports) {
+},{"../config":"k5Hzs","./View":"5cUXS","url:../../img/icons.svg":"loVOp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4Lqzq":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _iconsSvg = require("url:../../img/icons.svg");
