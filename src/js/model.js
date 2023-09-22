@@ -199,7 +199,6 @@ export const uploadRecipe = async newRecipe => {
 
     // Upload the recipe to the server with the api key 
     const {data} = await sendJSON(`${API_URL}?key=${API_KEY}`, recipe);
-    console.log(data);
 
     // create the recipe object and add it into the state
     const addedRecipe = createRecipeObject(data.recipe);

@@ -171,7 +171,6 @@ const controlDeleteAddedRecipe = async () => {
       recipeView.render(model.state.recipe)
     }, 2000);
     
-    console.log("hello");
   } catch (error) {
     console.log(error);
   }
